@@ -1,0 +1,246 @@
+GHOST PROJECT
+SOC INCIDENT REPORT
+
+Incident ID: GHOST-001
+Date: November 27, 2026
+Incident Type: Suspicious Authentication Activity
+Target Account: GhostTest
+Operating System: Windows 11
+Severity: Informational
+Classification: Authorized Benign Simulation
+Status: Investigation Completed
+
+
+
+1. EXECUTIVE SUMMARY
+
+The Ghost Project was conducted as a controlled cybersecurity lab designed to simulate, detect, and investigate suspicious Windows authentication activity.
+
+A local user account named GhostTest was created within a Windows 11 virtual machine. Two failed authentication attempts were recorded, followed by a successful login.
+
+Windows Security Event Logs and PowerShell were used to identify and analyze Event IDs 4720, 4625, and 4624.
+
+Evidence was collected and exported in EVTX and CSV formats. SHA256 hashes were generated and compared to verify evidence integrity. A chronological incident timeline was also reconstructed and validated.
+
+The investigation determined that the observed activity was an authorized benign simulation. The reviewed events did not establish a malicious intrusion.
+
+The project demonstrates practical SOC analyst skills in authentication monitoring, log analysis, event correlation, digital evidence preservation, and incident classification.
+
+
+
+
+2. INVESTIGATION METHODOLOGY
+
+1. Utilized a Windows 11 virtual machine within Oracle VirtualBox as a controlled cybersecurity testing environment.
+
+2. Created a local test account named GhostTest.
+
+3. Simulated two failed authentication attempts followed by a successful login.
+
+4. Used PowerShell Get-WinEvent commands to retrieve Windows Security Event Logs.
+
+5. Identified and analyzed the following Windows Security Event IDs:
+
+   - 4720: User account creation.
+   - 4625: Failed authentication.
+   - 4624: Successful authentication.
+
+6. Examined account names, logon types, authentication failure codes, source IP addresses, and process information.
+
+7. Exported Windows Security Event Logs into EVTX and CSV evidence files.
+
+8. Generated SHA256 cryptographic hashes using Get-FileHash.
+
+9. Compared the calculated hashes against the saved hash records to verify evidence integrity.
+
+10. Reconstructed and validated a chronological authentication timeline using PowerShell.
+
+11. Evaluated the collected evidence and classified the activity as an authorized benign simulation.
+
+
+
+
+
+3. FORENSIC EVIDENCE AND INTEGRITY VERIFICATION
+
+Evidence storage location: C:\GhostProject
+
+Evidence inventory:
+
+- Ghost_Security_Evidence.evtx
+  Full Windows Security Event Log export.
+  File size: 21,041,152 bytes.
+
+- Ghost_Authentication.csv
+  Filtered account creation and authentication events.
+  File size: 7,334 bytes.
+
+- Ghost_Evidence_Hashes.csv
+  Recorded SHA256 cryptographic hashes for the original evidence exports.
+
+- Ghost_Timeline.csv
+  Reconstructed chronological timeline of the four identified security events.
+
+Evidence integrity verification:
+
+PowerShell Get-FileHash was used to generate SHA256 hashes for the EVTX and authentication CSV evidence files.
+
+The calculated hashes were exported into a separate CSV file for documentation and future integrity verification.
+
+The evidence files were subsequently hashed again, and the resulting values were visually compared against the previously recorded hashes.
+
+Verification result: Matching hashes observed.
+
+The incident timeline was separately validated by importing the timeline CSV into PowerShell and reviewing the recorded events.
+
+
+
+4. INCIDENT TIMELINE
+
+Date: November 27, 2026
+Hostname: LAB-WIN11
+Target Account: GhostTest
+Time Reference: Local VM time
+
+09:02:54 AM
+Event ID: 4720
+Activity: Local user account GhostTest created.
+
+09:28:42 AM
+Event ID: 4625
+Activity: First recorded failed authentication attempt.
+
+09:28:53 AM
+Event ID: 4625
+Activity: Second recorded failed authentication attempt.
+
+09:55:20 AM
+Event ID: 4624
+Activity: Successful authentication recorded for GhostTest.
+
+TIMELINE ANALYSIS
+
+The two failed authentication attempts occurred 11 seconds apart.
+
+A successful authentication occurred 26 minutes and 27 seconds after the second recorded failure.
+
+The observed authentication sequence was consistent with the authorized lab simulation.
+
+Two failed authentication attempts alone are insufficient to establish a brute-force attack.
+
+The chronological sequence was verified using PowerShell and preserved in Ghost_Timeline.csv.
+
+
+
+
+
+5. MITRE ATT&CK MAPPING
+
+Technique 1: Create Account — Local Account
+Technique ID: T1136.001
+Tactic: Persistence
+Related Event ID: 4720
+
+Analysis:
+The creation of the GhostTest local account simulates behavior that an adversary could use to establish persistent access to a Windows endpoint.
+
+Technique 2: Brute Force — Password Guessing
+Technique ID: T1110.001
+Tactic: Credential Access
+Related Event ID: 4625
+
+Analysis:
+Two failed authentication attempts were identified. This activity demonstrates how Windows Security Logs can support password-guessing detection. However, the available evidence is insufficient to confirm a brute-force attack.
+
+Technique 3: Valid Accounts — Local Accounts
+Technique ID: T1078.003
+Tactics: Initial Access, Persistence, Privilege Escalation, Defense Evasion
+Related Event ID: 4624
+
+Analysis:
+Successful authentication using the GhostTest account demonstrates activity that could be associated with the unauthorized use of valid local credentials in a real-world attack.
+
+MAPPING CONCLUSION
+
+These techniques represent simulated behaviors and potential detection opportunities. No malicious activity was confirmed during this controlled investigation.
+
+
+
+
+
+6. FINDINGS AND RECOMMENDATIONS
+
+INVESTIGATION FINDINGS
+
+- Target account: GhostTest
+- Hostname: LAB-WIN11
+- Source IP address: 127.0.0.1
+- Logon Type: 2 (Interactive)
+- Authentication Package: Negotiate
+- Caller Process: C:\Windows\System32\svchost.exe
+- Failure Status: 0xC000006D
+- Failure Substatus: 0xC000006A
+- Failure Reason: Incorrect password
+- Recorded failed authentication attempts: 2
+- Recorded successful authentication attempts: 1
+
+RISK ASSESSMENT
+
+The investigated authentication events were consistent with authorized local testing.
+
+The source IP address was identified as a loopback address, indicating local authentication activity rather than an external network connection for the examined events.
+
+No unauthorized access or malicious intrusion was confirmed within the reviewed evidence.
+
+Final Severity: Informational
+Classification: Authorized Benign Simulation
+
+SECURITY RECOMMENDATIONS
+
+1. Monitor Windows Security Event IDs 4720, 4625, and 4624.
+
+2. Configure SIEM alerts for repeated failed authentication attempts.
+
+3. Correlate failed authentication attempts followed by successful logins.
+
+4. Implement appropriate account lockout and password policies.
+
+5. Regularly audit newly created local user accounts.
+
+6. Enforce the principle of least privilege.
+
+7. Maintain centralized security logging and appropriate log retention policies.
+
+8. Preserve incident evidence and verify file integrity using SHA256 hashing.
+
+RESPONSE DECISION
+
+No containment or escalation was required because the observed activity was part of an authorized lab simulation.
+
+7. FINAL CONCLUSION
+
+The Ghost Project successfully demonstrated an end-to-end Windows authentication security investigation within a controlled virtual laboratory environment.
+
+Windows Security Event Logs were collected, filtered, analyzed, and correlated using PowerShell to investigate local account creation, failed authentication attempts, and successful authentication activity.
+
+Digital evidence was preserved through EVTX and CSV exports, with SHA256 cryptographic hashing used to verify the integrity of the original evidence exports.
+
+A chronological incident timeline was reconstructed and validated. Observed behaviors were mapped to relevant MITRE ATT&CK techniques to demonstrate potential adversary detection opportunities.
+
+The investigation concluded that the observed activity was an authorized benign simulation. No malicious intrusion was confirmed within the reviewed evidence.
+
+This project demonstrates practical competencies relevant to entry-level Security Operations Center (SOC) analyst responsibilities, including security monitoring, incident investigation, digital evidence preservation, threat classification, and technical report writing.
+
+FINAL INCIDENT STATUS
+
+Severity: Informational
+Classification: Authorized Benign Simulation
+Investigation Status: Completed
+Incident Disposition: Closed
+Escalation Required: No
+Containment Required: No
+
+PUBLICATION NOTE
+Hostname anonymized for public release. Original evidence and hash records are retained privately. Published copies are not the original hashed evidence.
+
+END OF REPORT
